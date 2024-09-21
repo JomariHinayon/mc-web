@@ -61,7 +61,8 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'media_cutter.urls'
 
 TEMPLATE_DIRS = [
-    BASE_DIR / 'templates'
+    BASE_DIR / 'templates',
+    BASE_DIR / 'authentication/templates',
 ]
 
 TEMPLATES = [
