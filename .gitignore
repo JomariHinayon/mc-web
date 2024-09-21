@@ -139,4 +139,4 @@ GitHub.sublime-settings
 
 # node modules
 node_modules/
-static/
+static
