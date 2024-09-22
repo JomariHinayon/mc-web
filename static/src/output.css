@@ -1164,6 +1164,14 @@ input:checked + .toggle-bg {
   margin-top: 0.5rem;
 }
 
+.mb-20 {
+  margin-bottom: 5rem;
+}
+
+.mb-40 {
+  margin-bottom: 10rem;
+}
+
 .block {
   display: block;
 }
