@@ -9760,3 +9760,100 @@ html[data-theme="dark"] .ui-widget-content .ui-state-default {
   background: #222222;
   border-color: #222222;
 }
+
+/*************************SETUP Q&A PAGE *****************************/
+
+.center-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; 
+  height: 100vh; 
+}
+
+.text-container {
+  margin-bottom: 5px; /* Space between text and input */
+}
+
+.input-container {
+  margin-bottom: 50px; /* Added space below each input */
+}
+
+.transparent-input {
+  background-color: transparent; 
+  border: 1px solid #fff; 
+  padding: 10px; 
+  color: #fff; 
+  width: 400px; /* Width of the input types */
+  text-align: center; 
+  outline: none; 
+  transition: background-color 0.8s; /* Smooth background color transition */
+  border-radius: 10px;
+}
+
+.transparent-input::placeholder {
+  color: rgba(255, 255, 255, 0.7); 
+}
+
+/* Keep input transparent on focus */
+.transparent-input:focus {
+  border-color: #fff; /* Keep border white on focus */
+  background-color: transparent; /* Keep background transparent */
+}
+
+/* Hide placeholder text when input is focused */
+.transparent-input:focus::placeholder {
+  color: transparent; /* Hide placeholder on focus */
+}
+
+/* Styles for the dropdown */
+.transparent-dropdown {
+  background-color: transparent; /* Transparent background */
+  border: 1px solid #fff; /* White border for visibility */
+  padding: 10px; /* Padding for better usability */
+  color: #fff; /* Text color set to white */
+  width: 400px; /* Width of the dropdown */
+  text-align: center; /* Center text in dropdown */
+  outline: none; /* Remove outline on focus */
+  appearance: none; /* Remove default dropdown styling */
+  border-radius: 10px; /* Rounded corners */
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23fff"><path d="M7 10l5 5 5-5z"/></svg>'); /* Dropdown arrow */
+  background-repeat: no-repeat; /* Prevent repeat */
+  background-position: right 10px center; /* Position arrow */
+  background-size: 12px; /* Size of the arrow */
+}
+
+/* Hide the default dropdown arrow */
+.transparent-dropdown::-ms-expand {
+  display: none; /* Hide default dropdown arrow in IE */
+}
+
+/* Styles for the dropdown options (Note: not fully supported by all browsers) */
+.transparent-dropdown option {
+  background-color: transparent; /* Transparent background for options */
+  color: #fff; /* Text color for options */
+}
+
+/* Styles for dropdown on focus */
+.transparent-dropdown:focus {
+  border-color: #fff; /* Keep border white on focus */
+  background-color: transparent; /* Keep background transparent */
+}
+
+/* Change the dropdown background color to semi-transparent when active */
+.transparent-dropdown:focus option {
+  background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background for options */
+}
+
+/* Full transparency for dropdown list */
+.transparent-dropdown:focus {
+  background-color: rgba(15, 2, 2, 0.7); /* Semi-transparent background for the dropdown */
+}
+
+
+
+
+
+
+
+
