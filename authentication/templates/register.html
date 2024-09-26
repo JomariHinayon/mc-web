@@ -8,51 +8,79 @@
         <div class="geex-content__authentication__content__wrapper">
           <div class="geex-content__authentication__content__logo">
             <a href="#">
-              <img class="logo-lite" src="{% static 'assets/img/logo-dark.svg' %}" alt="logo" />
-              <img class="logo-dark" src="{% static 'assets/img/logo-lite.svg' %}" alt="logo" />
+              <h1 class="geex-content__authentication__title fs-1">Welcome, Musikero ♫</h1>
             </a>
           </div>
-          <form id="signInForm" class="geex-content__authentication__form">
+
+          <!-- Display form errors here -->
+          {% if form.errors %}
+            <div class="form-errors mb-20">
+              {% for field in form %}
+                {% if field.errors %}
+                  <p class="text-danger">{{ field.label }}: {{ field.errors }}</p>
+                {% endif %}
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <form id="signInForm" class="geex-content__authentication__form" method="POST" >
+            {% csrf_token %}
             <h2 class="geex-content__authentication__title">Sign Up Your Account 👋</h2>
+
             <div class="geex-content__authentication__form-group">
-              <label for="emailSignIn">Your Email</label>
-              <input type="email" id="emailSignIn" name="emailSignIn" placeholder="Enter Your Email" required />
+              <label for="emailSignIn">Your Username</label>
+              <!-- Bind email field to Django's form -->
+              {{ form.username }}
               <i class="uil-envelope"></i>
             </div>
+
+            <div class="geex-content__authentication__form-group">
+              <label for="emailSignIn">Your Email</label>
+              <!-- Bind email field to Django's form -->
+              {{ form.email }}
+              <i class="uil-envelope"></i>
+            </div>
+
             <div class="geex-content__authentication__form-group">
               <div class="geex-content__authentication__label-wrapper">
                 <label for="loginPassword">Password</label>
               </div>
-              <input type="password" id="loginPassword" name="loginPassword" placeholder="Password" required />
+              <!-- Bind password field 1 -->
+              {{ form.password1 }}
               <i class="uil-eye toggle-password-type"></i>
             </div>
+
             <div class="geex-content__authentication__form-group">
               <div class="geex-content__authentication__label-wrapper">
                 <label for="confirmPassword">Confirm Password</label>
               </div>
-              <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required />
+              <!-- Bind password field 2 -->
+              {{ form.password2 }}
               <i class="uil-eye toggle-password-type"></i>
             </div>
+
             <div class="geex-content__authentication__form-group custom-checkbox">
               <input type="checkbox" class="geex-content__authentication__checkbox-input" id="rememberMe" />
-              <label class="geex-content__authentication__checkbox-label" for="rememberMe">By creating an account you agree to our <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a></label>
+              <label class="geex-content__authentication__checkbox-label" for="rememberMe">
+                By creating an account you agree to our <a href="#">Terms & Conditions</a> and
+                <a href="#">Privacy Policy</a>
+              </label>
             </div>
+
             <button type="submit" class="geex-content__authentication__form-submit">Sign Up</button>
             <span class="geex-content__authentication__form-separator">Or</span>
             <div class="geex-content__authentication__form-social">
               <a href="#" class="geex-content__authentication__form-social__single"><img src="{% static 'assets/img/icon/google.svg' %}" alt="Google" />Google</a>
-              <a href="#" class="geex-content__authentication__form-social__single">
-                <svg width="15" height="19" viewBox="0 0 15 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <!-- SVG path content here -->
-                </svg>Apple
               </a>
             </div>
+
             <div class="geex-content__authentication__form-footer">
               Already have an account? <a href="{% url 'login' %}">Sign In</a>
             </div>
           </form>
         </div>
       </div>
+
       <div class="geex-content__authentication__img">
         <img src="{% static 'assets/img/authentication.svg' %}" alt="Authentication Illustration" />
       </div>
