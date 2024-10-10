@@ -7,21 +7,64 @@
 {% endblock %}
 
 {% block content %}
-  <h4 class="py-4 mb-6">Youtube Download</h4>
+  <h4 class="py-4 mb-6 text-center">Youtube Download</h4>
 
   <div class="row g-6">
     <div class="col-md-12">
       <div class="card">
         <div class="card-body">
           <div>
-            <label for="defaultFormControlInput" class="form-label pb-2">Please insert a valid YouTube video URL</label>
+            <label for="youtubeSearchInput" class="form-label pb-2">Search for YouTube videos</label>
             <div class="d-flex gap-3">
-              <input type="text" class="form-control" id="defaultFormControlInput" placeholder="Search or paste Youtube link here" aria-describedby="defaultFormControlHelp" />
-              <button type="button" class="btn btn-primary waves-effect waves-light">Download</button>
+              <input type="text" class="form-control" id="youtubeSearchInput" placeholder="Enter keywords" aria-describedby="searchHelp" />
+              <button type="button" class="btn btn-primary" onclick="searchYouTube()">Search</button>
             </div>
           </div>
+          <div id="searchResults" class="mt-4"></div>
         </div>
       </div>
     </div>
   </div>
+<script>
+  function searchYouTube() {
+    const query = document.getElementById('youtubeSearchInput').value;
+    const apiKey = 'AIzaSyD9Tw__kjnqQgvIsy2L0oYxrOkKJXZccro';
+    const apiUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=${query}&key=${apiKey}&maxResults=5`;
+
+    fetch(apiUrl)
+      .then(response => response.json())
+      .then(data => {
+        const searchResults = document.getElementById('searchResults');
+        searchResults.innerHTML = ''; // Clear previous results
+
+        data.items.forEach(item => {
+          const videoId = item.id.videoId;
+          const title = item.snippet.title;
+          const thumbnail = item.snippet.thumbnails.medium.url;
+          const channelTitle = item.snippet.channelTitle;
+
+          const videoElement = `
+            <div class="card mb-3">
+              <div class="row g-0">
+                <div class="col-md-4">
+                  <img src="${thumbnail}" class="img-fluid rounded-start" alt="${title}">
+                </div>
+                <div class="col-md-8">
+                  <div class="card-body">
+                    <h5 class="card-title">${title}</h5>
+                    <p class="card-text"><small class="text-muted">By ${channelTitle}</small></p>
+                    <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank" class="btn btn-primary">Play Video</a>
+                    <a href="download/mp4/${videoId}" class="btn btn-success">Download MP4</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+          searchResults.innerHTML += videoElement;
+        });
+      })
+      .catch(error => console.log('Error:', error));
+  }
+
+</script>
 {% endblock %}
