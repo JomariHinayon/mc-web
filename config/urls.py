@@ -21,8 +21,8 @@ from web_project.views import SystemView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    # starter urls
-    path("", include("apps.sample.urls")),
+    # core urls
+    path("", include("apps.core.urls")),
     # pages urls
     path("", include("apps.pages.urls")),
     # Auth urls

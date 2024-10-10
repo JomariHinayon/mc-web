@@ -9,7 +9,7 @@ Refer to sample/urls.py file for more pages.
 """
 
 
-class SampleView(TemplateView):
+class CoreView(TemplateView):
     # Predefined function
     def get_context_data(self, **kwargs):
         # A function to init the global layout. It is defined in web_project/__init__.py file

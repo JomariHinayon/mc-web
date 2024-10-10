@@ -2,15 +2,27 @@
   "menu": [
     {
       "url": "index",
-      "icon": "menu-icon tf-icons ti ti-smart-home",
-      "name": "Page 1",
-      "slug": "index"
+      "icon": "menu-icon tf-icons ti ti-apps",
+      "name": "Application",
+      "slug": "application"
     },
     {
-      "url": "page-2",
-      "icon": "menu-icon tf-icons ti ti-app-window",
-      "name": "Page 2",
-      "slug": "page-2"
+      "url": "yt-download",
+      "icon": "menu-icon tf-icons ti ti-brand-youtube",
+      "name": "YT Download",
+      "slug": "yt-download"
+    },
+    {
+      "url": "saved-videos",
+      "icon": "menu-icon tf-icons ti ti-download",
+      "name": "Saved Videos",
+      "slug": "saved-videos"
+    },
+    {
+      "url": "projects",
+      "icon": "menu-icon tf-icons ti ti-brand-databricks",
+      "name": "Projects",
+      "slug": "projects"
     }
   ]
 }
