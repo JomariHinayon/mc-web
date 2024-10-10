@@ -3,20 +3,14 @@
     {
       "url": "index",
       "icon": "menu-icon tf-icons ti ti-apps",
-      "name": "Application",
-      "slug": "application"
+      "name": "Dashboard",
+      "slug": "dashboard"
     },
     {
-      "url": "yt-download",
+      "url": "my_videos",
       "icon": "menu-icon tf-icons ti ti-brand-youtube",
-      "name": "YT Download",
-      "slug": "yt-download"
-    },
-    {
-      "url": "saved-videos",
-      "icon": "menu-icon tf-icons ti ti-download",
-      "name": "Saved Videos",
-      "slug": "saved-videos"
+      "name": "My Videos",
+      "slug": "my_videos"
     },
     {
       "url": "projects",

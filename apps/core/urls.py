@@ -14,14 +14,14 @@ urlpatterns = [
         name="application",
     ),
     path(
-        "yt-download",
-        CoreView.as_view(template_name="page_2.html"),
-        name="yt-download",
+        "my-videos",
+        CoreView.as_view(template_name="my_videos.html"),
+        name="my_videos",
     ),
     path(
-        "saved-videos",
-        CoreView.as_view(template_name="page_2.html"),
-        name="saved-videos",
+        "yt-download",
+        CoreView.as_view(template_name="yt_download.html"),
+        name="yt_download",
     ),
     path(
         "projects",

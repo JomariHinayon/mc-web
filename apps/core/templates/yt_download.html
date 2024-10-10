@@ -1,0 +1,27 @@
+{% extends layout_path %}
+
+{% load i18n %}
+
+{% block title %}
+  Youtube Download
+{% endblock %}
+
+{% block content %}
+  <h4 class="py-4 mb-6">Youtube Download</h4>
+
+  <div class="row g-6">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <div>
+            <label for="defaultFormControlInput" class="form-label pb-2">Please insert a valid YouTube video URL</label>
+            <div class="d-flex gap-3">
+              <input type="text" class="form-control" id="defaultFormControlInput" placeholder="Search or paste Youtube link here" aria-describedby="defaultFormControlHelp" />
+              <button type="button" class="btn btn-primary waves-effect waves-light">Download</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

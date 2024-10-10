@@ -1,28 +1,87 @@
 {% extends layout_path %}
 
+{% load static %}
 {% load i18n %}
 
 {% block title %}
-  Page 1 - Starter Kit
+  Cards Actions- UI elements
 {% endblock %}
 
+{% block vendor_css %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'vendor/libs/spinkit/spinkit.css' %}" />
+{% endblock %}
+
+{% block vendor_js %}
+  {{ block.super }}
+  <script src="{% static 'vendor/libs/block-ui/block-ui.js' %}"></script>
+  <script src="{% static 'vendor/libs/sortablejs/sortable.js' %}"></script>
+{% endblock %}
+
+{% block page_js %}
+  {{ block.super }}
+  <script src="{% static 'js/cards-actions.js' %}"></script>
+{% endblock %}
 {% block content %}
-  <div class="col-12 ">
-    <div class="card mb-6">
-      <h5 class="card-header">Video Selection</h5>
+
+<!-- Draggable Cards -->
+<h5 class="pb-1 mb-6">Recently Played</h5>
+<div class="row g-6" id="sortable-4">
+  <div class="col-md-6 col-xl-2">
+    <div class="card bg-primary text-white">
+      <div class="card-header cursor-move text-white">Drag me!</div>
       <div class="card-body">
-        <div class="row mt-4">
-          <div class="d-grid gap-2 col-lg-6 mx-auto">
-            <a href="{% url 'yt-download' %}" class="btn btn-primary btn-lg waves-effect waves-light">Download Video</a>
-            <small class="text-light fw-medium text-center py-2">or</small>
-            <label for="upload" class="btn btn-secondary btn-lg waves-effect waves-light" tabindex="0">
-                <span class="d-none d-sm-block">Upload Video</span>
-                <i class="ti ti-upload d-block d-sm-none"></i>
-                <input type="file" id="upload" class="account-file-input" hidden accept="video/mp4" />
-            </label>
-          </div>
-        </div>
+        <h5 class="card-title text-white">Primary card title</h5>
+        <p class="card-text">Some quick example text to build on the card title and make up.</p>
       </div>
     </div>
   </div>
+  <div class="col-md-6 col-xl-2">
+    <div class="card bg-secondary text-white">
+      <div class="card-header cursor-move text-white">Drag me!</div>
+      <div class="card-body">
+        <h5 class="card-title text-white">Secondary card title</h5>
+        <p class="card-text">Some quick example text to build on the card title and make up.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-xl-2">
+    <div class="card bg-success text-white">
+      <div class="card-header cursor-move text-white">Drag me!</div>
+      <div class="card-body">
+        <h5 class="card-title text-white">Success card title</h5>
+        <p class="card-text">Some quick example text to build on the card title and make up.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-xl-2">
+    <div class="card bg-danger text-white">
+      <div class="card-header cursor-move text-white">Drag me!</div>
+      <div class="card-body">
+        <h5 class="card-title text-white">Danger card title</h5>
+        <p class="card-text">Some quick example text to build on the card title and make up.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-xl-2">
+    <div class="card bg-warning text-white">
+      <div class="card-header cursor-move text-white">Drag me!</div>
+      <div class="card-body">
+        <h5 class="card-title text-white">Warning card title</h5>
+        <p class="card-text">Some quick example text to build on the card title and make up.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2 col-xl-2">
+    <div class="card bg-info text-white">
+      <div class="card-header cursor-move text-white">Drag me!</div>
+      <div class="card-body">
+        <h5 class="card-title text-white">Info card title</h5>
+        <p class="card-text">Some quick example text to build on the card title and make up.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- / Draggable Cards -->
+ 
 {% endblock %}
