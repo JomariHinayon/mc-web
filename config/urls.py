@@ -27,6 +27,8 @@ urlpatterns = [
     path("", include("apps.pages.urls")),
     # Auth urls
     path("", include("apps.authentication.urls")),
+    path("", include("auth.urls")),
+    
 ]
 
 handler404 = SystemView.as_view(template_name="pages_misc_error.html", status=404)

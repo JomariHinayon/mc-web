@@ -10,7 +10,7 @@ from .verify_email.views import  VerifyEmailTokenView , VerifyEmailView, SendVer
 urlpatterns = [
     path(
         "login/",
-        LoginView.as_view(template_name="auth/login.html"),
+        LoginView.as_view(template_name="auth_login_basic.html"),
         name="login",
     ),
 
@@ -22,7 +22,7 @@ urlpatterns = [
 
     path(
         "register/",
-        RegisterView.as_view(template_name="auth/register.html"),
+        RegisterView.as_view(template_name="auth_register_basic.html"),
         name="register",
     ),
 

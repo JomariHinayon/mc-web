@@ -10,10 +10,12 @@ import uuid
 
 class RegisterView(AuthView):
     def get(self, request):
+        print('testsst')
         if request.user.is_authenticated:
             # If the user is already logged in, redirect them to the home page or another appropriate page.
             return redirect("index")  # Replace 'index' with the actual URL name for the home page
-
+        else:
+            return redirect("auth-register-basic")
         # Render the login page for users who are not logged in.
         return super().get(request)
 
@@ -51,13 +53,13 @@ class RegisterView(AuthView):
         user_profile.email = email
         user_profile.save()
 
-        send_verification_email(email, token)
+        # send_verification_email(email, token)
 
-        if settings.EMAIL_HOST_USER and settings.EMAIL_HOST_PASSWORD:
-            messages.success(request, "Verification email sent successfully")
-        else:
-            messages.error(request, "Email settings are not configured. Unable to send verification email.")
+        # if settings.EMAIL_HOST_USER and settings.EMAIL_HOST_PASSWORD:
+        #     messages.success(request, "Verification email sent successfully")
+        # else:
+        #     messages.error(request, "Email settings are not configured. Unable to send verification email.")
 
         request.session['email'] = email ## Save email in session
         # Redirect to the verification page after successful registration
-        return redirect("verify-email-page")
+        return redirect("login")
