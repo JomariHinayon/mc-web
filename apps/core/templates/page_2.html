@@ -2,10 +2,44 @@
 
 {% load i18n %}
 
-{% block title %}Page 2 - Starter Kit{% endblock title %}
+{% block title %}YouTube Downloads{% endblock title %}
 
 {% block content %}
 
-<h4 class="py-4 mb-6">Youtube Download</h4>
+<h4 class="py-4 mb-6 text-center">YouTube Downloads</h4>
+
+<div class="container">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Date</th>
+        <th>Size</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for video in videos %}
+      <tr>
+        <td>{{ video.name }}</td>
+        <td>{{ video.date }}</td>
+        <td>{{ video.size }} MB</td>
+        <td>
+          <form action="{% url 'delete_video' video.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </form>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="4" class="text-center">No videos downloaded yet.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 
 {% endblock %}

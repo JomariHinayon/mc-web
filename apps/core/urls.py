@@ -3,7 +3,7 @@ from .views import CoreView, download_video
 
 urlpatterns = [
     path(
-        "",
+        "index",
         CoreView.as_view(template_name="index.html"),
         name="index",
     ),
