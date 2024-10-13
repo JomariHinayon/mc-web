@@ -37,9 +37,9 @@ TEMPLATE_CONFIG = {
 # Theme Variables
 # ? Personalize template by changing theme variables (For ex: Name, URL Version etc...)
 THEME_VARIABLES = {
-    "creator_name": "PixInvent",
-    "creator_url": "https://pixinvent.com/",
-    "template_name": "Vuexy",
+    "creator_name": "Jomari Hinayon",
+    "creator_url": "#",
+    "template_name": "MusicPractice",
     "template_suffix": "Django Admin Template",
     "template_version": "2.0.0",
     "template_free": False,

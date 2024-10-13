@@ -3,7 +3,12 @@ from .views import CoreView, download_video
 
 urlpatterns = [
     path(
-        "index",
+        "application",
+        CoreView.as_view(template_name="application.html"),
+        name="application",
+    ),
+    path(
+        "dashboard",
         CoreView.as_view(template_name="index.html"),
         name="index",
     ),
