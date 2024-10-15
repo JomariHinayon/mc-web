@@ -182,5 +182,11 @@ THEME_LAYOUT_DIR = THEME_LAYOUT_DIR
 TEMPLATE_CONFIG = TEMPLATE_CONFIG
 THEME_VARIABLES = THEME_VARIABLES
 
-# Your stuff...
-# ------------------------------------------------------------------------------
+# media
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+# Youtube
+YT_API_KEY = os.environ.get("YT_API_KEY", default=None)
+
+SECURE_REFERRER_POLICY = "no-referrer-when-downgrade"

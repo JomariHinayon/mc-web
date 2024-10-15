@@ -28,8 +28,9 @@
 <script>
   function searchYouTube() {
     const query = document.getElementById('youtubeSearchInput').value;
-    const apiKey = 'AIzaSyD9Tw__kjnqQgvIsy2L0oYxrOkKJXZccro';
+    const apiKey = '{{YT_API_KEY}}';
     const apiUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=${query}&key=${apiKey}&maxResults=5`;
+    
 
     fetch(apiUrl)
       .then(response => response.json())
@@ -53,8 +54,10 @@
                   <div class="card-body">
                     <h5 class="card-title">${title}</h5>
                     <p class="card-text"><small class="text-muted">By ${channelTitle}</small></p>
+                    <div class="d-flex gap-3">
                     <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank" class="btn btn-primary">Play Video</a>
                     <a href="download/mp4/${videoId}" class="btn btn-success">Download MP4</a>
+                    </div>
                   </div>
                 </div>
               </div>

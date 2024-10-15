@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CoreView, download_video
+from .views import CoreView, DownloadYtView, GetProgressView
 
 urlpatterns = [
     path(
@@ -32,5 +32,10 @@ urlpatterns = [
         CoreView.as_view(template_name="page_2.html"),
         name="projects",
     ),
-    path('download/mp4/<str:video_id>/', download_video, name='download_video'),
+    path('download/mp4/<str:video_id>/', 
+        DownloadYtView.as_view(template_name="download_video.html"), 
+        name='download_video'),
+    path('get-progress/', GetProgressView.as_view(), name='get_progress'),  # New URL
+
+
 ]

@@ -1,0 +1,66 @@
+{% extends layout_path %}
+
+{% load i18n %}
+
+{% block title %}
+  Youtube Download
+{% endblock %}
+
+{% block content %}
+  <div class="d-flex gap-5 mb-5">
+    <a href="{% url 'yt_download' %}" class="btn btn-secondary waves-effect waves-light">Back</a>
+    <form method="POST" hx-post="{% url 'download_video' video_id %}">
+        <button type="submit" class="btn btn-success waves-effect waves-light">Start Download</button>
+    </form>
+  </div>
+
+  <div id="searchResults" class="row mb-12 g-6">
+    <div class="col-md-12 col-lg-12">
+      <div class="card h-100 p-5">
+        <div class="card-body">
+          <div class="progress" style="height: 24px;">
+            <div class="progress-bar" 
+                 role="progressbar" 
+                 style="width: 0%;"  <!-- Set initial width to 0 -->
+                 id="downloadProgressBar" 
+                 hx-get="{% url 'get_progress' %}" 
+                 hx-trigger="every 600ms" 
+                 hx-swap="innerHTML" 
+                 hx-target="#downloadProgressBar">
+              0%
+            </div>
+          </div>
+          <p class="card-text mt-5 text-center">Please wait while downloading {{ video_info.title }}...</p>
+        </div>
+        <img class="card-img-top w-100 h-75" src="{{ video_info.thumbnail }}" alt="{{ video_info.title }}" />
+        <h5 class="card-title mt-10">{{ video_info.title }}</h5>
+        <p class="card-text mb-5">By {{ video_info.channelTitle }}</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('htmx:afterSwap', (event) => {
+      if (event.target.id === 'downloadProgressBar') {
+        const progressData = JSON.parse(event.detail.xhr.response); // Parse the JSON response
+        const progressBar = document.getElementById('downloadProgressBar');
+
+        // Update the progress bar width and text based on the response
+        const match = progressData.progress_bar.match(/width:\s*(\d+)%/);
+        if (match) {
+          const progressPercentage = match[1];
+          progressBar.style.width = progressPercentage + '%';
+          progressBar.innerHTML = progressPercentage + '%';
+        }
+
+        // Handle completion
+        if (progressData.progress_bar.includes('100%')) {
+          progressBar.classList.remove('bg-warning'); // Change class if you have a warning style
+          progressBar.classList.add('bg-success'); // Optionally add a success style
+          // Update UI or redirect if necessary
+          alert('Download Complete!'); // Replace with a better UI update if desired
+        }
+      }
+    });
+  </script>
+{% endblock %}
