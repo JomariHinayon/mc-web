@@ -10,6 +10,7 @@
   <div class="d-flex gap-5 mb-5">
     <a href="{% url 'yt_download' %}" class="btn btn-secondary waves-effect waves-light">Back</a>
     <form method="POST" hx-post="{% url 'download_video' video_id %}">
+      {% csrf_token %}
         <button type="submit" class="btn btn-success waves-effect waves-light">Start Download</button>
     </form>
   </div>

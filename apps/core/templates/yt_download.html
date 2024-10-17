@@ -29,9 +29,10 @@
   function searchYouTube() {
     const query = document.getElementById('youtubeSearchInput').value;
     const apiKey = '{{YT_API_KEY}}';
+
     const apiUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=${query}&key=${apiKey}&maxResults=5`;
     
-
+    console.log(apiKey);
     fetch(apiUrl)
       .then(response => response.json())
       .then(data => {
