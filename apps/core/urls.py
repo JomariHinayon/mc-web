@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CoreView, DownloadYtView, GetProgressView
+from .views import CoreView, DownloadYtView, GetProgressView, YTSearchView
 
 urlpatterns = [
     path(
@@ -23,16 +23,16 @@ urlpatterns = [
         name="my_videos",
     ),
     path(
-        "yt-download",
-        CoreView.as_view(template_name="yt_download.html"),
-        name="yt_download",
+        "youtube-search",
+        YTSearchView.as_view(template_name="yt_search.html"),
+        name="yt_search",
     ),
     path(
         "projects",
         CoreView.as_view(template_name="page_2.html"),
         name="projects",
     ),
-    path('download/mp4/<str:video_id>/', 
+    path('download/mp4', 
         DownloadYtView.as_view(template_name="download_video.html"), 
         name='download_video'),
     path('get-progress/', GetProgressView.as_view(), name='get_progress'),  # New URL

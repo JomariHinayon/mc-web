@@ -1,6 +1,7 @@
 from django.views.generic import TemplateView
 from web_project import TemplateLayout
 from web_project.template_helpers.theme import TemplateHelper
+from django.shortcuts import redirect
 
 
 """
@@ -11,6 +12,12 @@ Refer to auth/urls.py file for more pages.
 
 
 class AuthView(TemplateView):
+    def get(self, request,  *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect("index")  
+        
+        return super().get(request, *args, **kwargs)  # Call the superclass method if not authenticated
+
     # Predefined function
     def get_context_data(self, **kwargs):
         # A function to init the global layout. It is defined in web_project/__init__.py file

@@ -1,0 +1,42 @@
+{% extends layout_path %}
+
+{% load i18n %}
+
+{% block title %}
+  YouTube Search
+{% endblock %}
+
+{% block content %}
+  <h4 class="py-4 mb-6 text-center">YouTube Search</h4>
+
+  <form method="get" action="{% url 'yt_search' %}">
+    <div class="d-flex gap-3">
+      <input type="text" class="form-control" name="query" placeholder="Enter keywords" required />
+      <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+  </form>
+
+  <div id="searchResults" class="mt-4">
+    {% for item in search_results %}
+      <div class="card mb-3">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img src="{{ item.snippet.thumbnails.medium.url }}" class="img-fluid rounded-start" alt="{{ item.snippet.title }}">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">{{ item.snippet.title }}</h5>
+              <p class="card-text"><small class="text-muted">By {{ item.snippet.channelTitle }}</small></p>
+              <div class="d-flex gap-3">
+                <a href="https://www.youtube.com/watch?v={{ item.id.videoId }}" target="_blank" class="btn btn-primary">Play Video</a>
+                <a href="{% url 'download_video' %}?video_id={{ item.id.videoId }}" class="btn btn-success">Download MP4</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p>No results found.</p>
+    {% endfor %}
+  </div>
+{% endblock %}

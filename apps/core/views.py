@@ -2,13 +2,16 @@ from django.views.generic import TemplateView
 from django.http import HttpResponse, Http404, JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from pytube import YouTube
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
+from pytube.exceptions import PytubeError
 from django.urls import reverse
-from threading import Thread
+
 from web_project import TemplateLayout
 from django.conf import settings
-import os
+from .models import Video
+
+import os, requests
 
 download_progress = {'progress': 0}
 
@@ -19,26 +22,63 @@ class CoreView(LoginRequiredMixin, TemplateView):
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         context['YT_API_KEY'] = settings.YT_API_KEY
         return context
+    
+
+class YTSearchView(CoreView):
+    def get(self, request, *args, **kwargs):
+        query = request.GET.get('query', '')  # Get the search query from the request
+        search_results = []
+
+        if query:
+            api_key = settings.YT_API_KEY
+            api_url = f"https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q={query}&key={api_key}&maxResults=5"
+
+            response = requests.get(api_url)
+            if response.status_code == 200:
+                data = response.json()
+                search_results = data.get('items', [])
+
+        context = self.get_context_data(search_results=search_results)
+        return render(request, 'yt_search.html', context)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['YT_API_KEY'] = settings.YT_API_KEY
+        return context
 
 
 class DownloadYtView(CoreView):
-    def get(self, request, video_id):
+    def get(self, request, *args, **kwargs):
+        video_id = request.GET.get('video_id')  
+        print(video_id)
         url = f"https://www.youtube.com/watch?v={video_id}"
-        yt = YouTube(url)
-        
-        video_info = {
-            'title': yt.title,
-            'thumbnail': yt.thumbnail_url,
-            'channelTitle': yt.author,
-            'description': yt.description,
-            'status': 'waiting'  # Initial status
-        }
+        response = None
 
-        context = self.get_context_data(video_info=video_info, video_id=video_id)
-        response = render(request, 'download_video.html', context)
+        try:
+            yt = YouTube(url)
+
+            video_info = {
+                'title': yt.title,
+                'thumbnail': yt.thumbnail_url,
+                'channelTitle': yt.author,
+                'description': yt.description,
+                'status': 'waiting'  # Initial status
+            }
+
+            context = self.get_context_data(video_info=video_info, video_id=video_id)
+            response = render(request, 'download_video.html', context)
+        except PytubeError as e:
+            print(f"PytubeError: {e}")
+            context = self.get_context_data(video_info={'status': 'error', 'error_message': 'Failed to retrieve video information.'})
+            response = render(request, 'download_video.html', context)
+        except Exception as e:
+            print(f"General Error: {e}")
+            context = self.get_context_data(video_info={'status': 'error', 'error_message': str(e)})
+            response = render(request, 'download_video.html', context)
+
         return response
-
-    def post(self, request, video_id):
+    def post(self, request):
+        video_id = request.POST.get('video_id')
         url = f"https://www.youtube.com/watch?v={video_id}"
         yt = YouTube(
             url,
@@ -71,8 +111,20 @@ class DownloadYtView(CoreView):
                 'thumbnail': yt.thumbnail_url,
                 'channelTitle': yt.author,
                 'description': yt.description,
-                'status': 'downloading'  # Indicate that the download is in progress
+                'status': 'downloading'
             }
+            
+            new_video = Video(
+                user=request.user,
+                video_url=video_path,
+                youtube_url=url,
+                source_type='youtube',
+                title=yt.title,
+                description=yt.description,
+            )
+            new_video.save()
+
+            print(new_video)
 
             context = self.get_context_data(video_info=video_info, video_id=video_id)
             return render(request, 'download_video.html', context)
