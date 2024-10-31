@@ -12,6 +12,7 @@
     <form method="POST">
       {% csrf_token %}
         <input type="hidden" name="video_id" value="{{video_id}}">
+        <input type="hidden" name="video_title" value="{{video_title}}">
         <button type="submit" class="btn btn-success waves-effect waves-light">Start Download</button>
     </form>
   </div>

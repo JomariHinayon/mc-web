@@ -28,8 +28,13 @@
               <h5 class="card-title">{{ item.snippet.title }}</h5>
               <p class="card-text"><small class="text-muted">By {{ item.snippet.channelTitle }}</small></p>
               <div class="d-flex gap-3">
-                <a href="https://www.youtube.com/watch?v={{ item.id.videoId }}" target="_blank" class="btn btn-primary">Play Video</a>
-                <a href="{% url 'download_video' %}?video_id={{ item.id.videoId }}" class="btn btn-success">Download MP4</a>
+                <a href="https://www.youtube.com/watch?v={{ item.id.videoId }}" target="_blank" class="btn btn-primary"><i class="tf-icons ti ti-player-play ti-xs me-1"></i>Play</a>
+                <a href="{% url 'download_video' %}?video_id={{ item.id.videoId }}&video_title={{item.snippet.title}}" class="btn btn-secondary"><i class="tf-icons ti ti-download ti-xs me-1"></i>Download</a>
+                <form id="save-button-container" hx-post="{% url 'save_yt_video' item.id.videoId %}" hx-swap="outerHTML">
+                  {% csrf_token %}
+                  {% include 'partials/save_button.html' %}
+                </form>
+                <a href="{% url 'download_video' %}?video_id={{ item.id.videoId }}" class="btn btn-success"><i class="tf-icons ti ti-square-rounded-plus ti-xs me-1"></i>New Project</a>
               </div>
             </div>
           </div>

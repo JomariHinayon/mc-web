@@ -1,41 +1,46 @@
 from django.urls import path
-from .views import CoreView, DownloadYtView, GetProgressView, YTSearchView
+from .views import CoreView, DownloadYtView, GetProgressView, \
+    YTSearchView, MyVideoView, ApplicationView, SaveVideoView
 
 urlpatterns = [
     path(
-        "application",
-        CoreView.as_view(template_name="application.html"),
-        name="application",
+        "application/play/youtube/<int:video_id>/",
+        ApplicationView.as_view(template_name="application_yt.html"),
+        name="application_yt",
     ),
     path(
-        "dashboard",
+        "dashboard/",
         CoreView.as_view(template_name="index.html"),
         name="index",
     ),
     path(
         "",
         CoreView.as_view(template_name="index.html"),
-        name="application",
+        name="index",
     ),
     path(
-        "my-videos",
-        CoreView.as_view(template_name="my_videos.html"),
+        "my-videos/",
+        MyVideoView.as_view(template_name="my_videos.html"),
         name="my_videos",
     ),
     path(
-        "youtube-search",
+        "youtube-search/",
         YTSearchView.as_view(template_name="yt_search.html"),
         name="yt_search",
     ),
     path(
-        "projects",
+        "projects/",
         CoreView.as_view(template_name="page_2.html"),
         name="projects",
     ),
-    path('download/mp4', 
+    path('download/mp4/', 
         DownloadYtView.as_view(template_name="download_video.html"), 
         name='download_video'),
-    path('get-progress/', GetProgressView.as_view(), name='get_progress'),  # New URL
-
+    path('get-progress/', 
+         GetProgressView.as_view(), 
+         name='get_progress'),  
+    path('youtube/saved/<str:video_id>', 
+        SaveVideoView.as_view(), 
+        name='save_yt_video'),
 
 ]

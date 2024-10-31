@@ -2,7 +2,7 @@ from django.views.generic import TemplateView
 from django.http import HttpResponse, Http404, JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from pytube import YouTube
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from pytube.exceptions import PytubeError
 from django.urls import reverse
@@ -22,7 +22,31 @@ class CoreView(LoginRequiredMixin, TemplateView):
         context = TemplateLayout.init(self, super().get_context_data(**kwargs))
         context['YT_API_KEY'] = settings.YT_API_KEY
         return context
+
+class MyVideoView(CoreView):
+
+    def get_context_data(self, **kwargs):
+        context = TemplateLayout.init(self, super().get_context_data(**kwargs))
+        videos = Video.objects.filter(user=self.request.user)
+        print(videos)
+        context['videos'] = videos
+        return context
     
+class ApplicationView(CoreView):
+    template_name = "application.html"
+
+    def get(self, request, *args, **kwargs):
+        video_id = kwargs.get('video_id')
+
+        if not video_id:
+            return redirect('index')
+        
+        video = Video.objects.get(video_id=video_id)
+        if not video:
+            return redirect('index')
+
+        context = self.get_context_data(video=video)
+        return render(request, self.template_name, context)
 
 class YTSearchView(CoreView):
     def get(self, request, *args, **kwargs):
@@ -49,51 +73,61 @@ class YTSearchView(CoreView):
 
 class DownloadYtView(CoreView):
     def get(self, request, *args, **kwargs):
-        video_id = request.GET.get('video_id')  
-        print(video_id)
+        video_id = request.GET.get('video_id') 
+        video_title = request.GET.get('video_title')  
         url = f"https://www.youtube.com/watch?v={video_id}"
         response = None
 
         try:
-            yt = YouTube(url)
+            yt = YouTube(url=url, use_oauth=True)
+
+            yt_title = video_title
+            if yt_title:
+                yt_title = yt.title
 
             video_info = {
-                'title': yt.title,
+                'title': yt_title,
                 'thumbnail': yt.thumbnail_url,
                 'channelTitle': yt.author,
                 'description': yt.description,
-                'status': 'waiting'  # Initial status
+                'status': 'waiting'
             }
 
-            context = self.get_context_data(video_info=video_info, video_id=video_id)
+        
+            context = self.get_context_data(video_info=video_info, video_id=video_id, video_title=video_title)
             response = render(request, 'download_video.html', context)
         except PytubeError as e:
             print(f"PytubeError: {e}")
             context = self.get_context_data(video_info={'status': 'error', 'error_message': 'Failed to retrieve video information.'})
-            response = render(request, 'download_video.html', context)
+            response = redirect('yt_search')
         except Exception as e:
             print(f"General Error: {e}")
             context = self.get_context_data(video_info={'status': 'error', 'error_message': str(e)})
-            response = render(request, 'download_video.html', context)
+            response = redirect('yt_search')
 
         return response
     def post(self, request):
         video_id = request.POST.get('video_id')
+        video_title = request.POST.get('video_title')
         url = f"https://www.youtube.com/watch?v={video_id}"
         yt = YouTube(
-            url,
+            url=url,
             on_progress_callback=self.progress_download,
             on_complete_callback=self.complete_download,
-            use_oauth=False,
-            allow_oauth_cache=True
+            use_oauth=True,
         )
+
+        yt_title = video_title
+        if yt.title:
+            yt_title = yt.title
         
-        video_path = os.path.join(settings.MEDIA_ROOT, 'videos', f"{yt.title}.mp4")
+        output_path = os.path.join(settings.MEDIA_ROOT, 'videos')
+        video_path = os.path.join(settings.MEDIA_ROOT, 'videos', f"{yt_title}.mp4")
         
         # Check if the video has already been downloaded
         if os.path.exists(video_path):
             video_info = {
-                'title': yt.title,
+                'title': yt_title,
                 'thumbnail': yt.thumbnail_url,
                 'channelTitle': yt.author,
                 'description': yt.description,
@@ -107,7 +141,8 @@ class DownloadYtView(CoreView):
             stream.download(output_path=os.path.dirname(video_path), filename=os.path.basename(video_path))
             
             video_info = {
-                'title': yt.title,
+                'yt_video_id': video_id,
+                'title': yt_title,
                 'thumbnail': yt.thumbnail_url,
                 'channelTitle': yt.author,
                 'description': yt.description,
@@ -115,16 +150,16 @@ class DownloadYtView(CoreView):
             }
             
             new_video = Video(
+                yt_video_id=video_id,
                 user=request.user,
                 video_url=video_path,
                 youtube_url=url,
                 source_type='youtube',
-                title=yt.title,
+                title=yt_title,
                 description=yt.description,
+                artist=yt.author
             )
             new_video.save()
-
-            print(new_video)
 
             context = self.get_context_data(video_info=video_info, video_id=video_id)
             return render(request, 'download_video.html', context)
@@ -132,7 +167,7 @@ class DownloadYtView(CoreView):
         except Exception as e:
             # Handle the error, log it, or display a message
             print(f"Error downloading video: {e}")
-            context = self.get_context_data(video_info={'title': yt.title, 'status': 'error', 'error_message': str(e)})
+            context = self.get_context_data(video_info={'title': yt_title, 'status': 'error', 'error_message': str(e)})
             return render(request, 'download_video.html', context)
         
     def download_video(self, video_id):
@@ -180,3 +215,30 @@ class GetProgressView(View):
 
         # Return the updated progress bar HTML directly
         return JsonResponse({'progress_bar': progress_bar}, status=response_code)
+
+class SaveVideoView(View):
+    def post(self, request, video_id, *args, **kwargs):
+        video_id = kwargs.get('video_id')
+        url = f"https://www.youtube.com/watch?v={video_id}"
+        yt = YouTube(
+            url,
+            on_progress_callback=self.progress_download,
+            on_complete_callback=self.complete_download,
+            use_oauth=False,
+            allow_oauth_cache=True
+        )
+        
+        saved_video = Video(
+                yt_video_id=video_id,
+                user=request.user,
+                youtube_url=url,
+                source_type='youtube',
+                title=yt.title,
+                description=yt.description,
+                artist=yt.author
+        )
+        saved_video.save()
+        
+
+        return render(request, 'partials/save_button.html', {'video': saved_video})
+   

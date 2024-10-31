@@ -1,0 +1,7 @@
+<button type="submit" class="btn btn-danger"  hx-trigger="click" hx-target="this">
+    {% if video.is_downloaded %}
+        <i class="tf-icons ti ti-heart-filled ti-xs me-1"></i>Saved
+    {% else %}
+        <i class="tf-icons ti ti-heart ti-xs me-1"></i>Save
+    {% endif %}
+</button>
