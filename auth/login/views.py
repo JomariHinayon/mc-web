@@ -2,6 +2,8 @@ from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.http import JsonResponse
+
 from auth.views import AuthView
 
 
@@ -44,3 +46,36 @@ class LoginView(AuthView):
             else:
                 messages.error(request, "Please enter a valid password.")
                 return redirect("login")
+
+
+class LoginAPIView(AuthView):
+
+    def post(self, request):
+        if request.method == "POST":
+            email = request.POST.get("email")
+            password = request.POST.get("password")
+
+            # Check if both email and password are provided
+            if not email or not password:
+                return JsonResponse({"status": "error", "message": "Both email and password are required."}, status=400)
+
+            # Check for valid email format and retrieve associated user if it exists
+            if "@" in email:
+                user_email = User.objects.filter(email=email).first()
+                if user_email is None:
+                    return JsonResponse({"status": "error", "message": "No account found with this email."}, status=404)
+                email = user_email.email
+            else:
+                return JsonResponse({"status": "error", "message": "Please enter a valid email address."}, status=400)
+
+            # Authenticate user
+            authenticated_user = authenticate(request, username=user_email.username, password=password)
+            if authenticated_user:
+                # Log the user in if authentication succeeds
+                login(request, authenticated_user)
+
+                # Respond with success and redirect URL if provided
+                next_url = request.POST.get("next", "index")
+                return JsonResponse({"status": "success", "message": "Login successful.", "redirect_url": next_url}, status=200)
+            else:
+                return JsonResponse({"status": "error", "message": "Invalid password."}, status=400)

@@ -1,7 +1,7 @@
 from django.urls import path
 from django.contrib.auth.views import LogoutView
 from .register.views import RegisterView
-from .login.views import LoginView
+from .login.views import LoginView, LoginAPIView
 from .forgot_password.views import ForgetPasswordView
 from .reset_password.views import ResetPasswordView
 from .verify_email.views import  VerifyEmailTokenView , VerifyEmailView, SendVerificationView
@@ -12,6 +12,11 @@ urlpatterns = [
         "login/",
         LoginView.as_view(template_name="auth_login_basic.html"),
         name="login",
+    ),
+    path(
+        "api/login/",
+        LoginAPIView.as_view(template_name="auth_login_basic.html"),
+        name="api_login",
     ),
 
     path(
@@ -24,6 +29,12 @@ urlpatterns = [
         "register/",
         RegisterView.as_view(template_name="auth_register_basic.html"),
         name="register",
+    ),
+    
+    path(
+        "api/register/",
+        RegisterView.as_view(),
+        name="api_register",
     ),
 
     path(

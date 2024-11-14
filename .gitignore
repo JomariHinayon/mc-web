@@ -48,6 +48,8 @@ MANIFEST
 pip-log.txt
 pip-delete-this-directory.txt
 
+
+
 # Unit test / coverage reports
 htmlcov/
 .tox/
@@ -72,7 +74,7 @@ cover/
 local_settings.py
 # db.sqlite3
 db.sqlite3-journal
-
+db.sqlite3
 # Flask stuff:
 instance/
 .webassets-cache

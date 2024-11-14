@@ -2,6 +2,9 @@ from django.shortcuts import redirect
 from django.contrib.auth.models import User, Group
 from django.contrib import messages
 from django.conf import settings
+from django.http import JsonResponse
+from django.views import View
+
 from auth.views import AuthView
 from auth.helpers import send_verification_email
 from auth.models import Profile
@@ -63,3 +66,54 @@ class RegisterView(AuthView):
         request.session['email'] = email ## Save email in session
         # Redirect to the verification page after successful registration
         return redirect("login")
+
+
+class RegisterAPIView(View):
+    def get(self, request):
+        if request.user.is_authenticated:
+            # Return a JSON response indicating the user is already authenticated
+            return JsonResponse({"status": "success", "message": "Already logged in."}, status=200)
+        else:
+            # Render the registration page for users who are not logged in
+            return super().get(request)
+
+    def post(self, request):
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+
+        # Check if a user with the same username or email already exists
+        if User.objects.filter(username=username).exists():
+            return JsonResponse({"status": "error", "message": "Username already exists."}, status=400)
+        if User.objects.filter(email=email).exists():
+            return JsonResponse({"status": "error", "message": "Email already exists."}, status=400)
+
+        # Create the user and set their password
+        created_user = User.objects.create_user(username=username, email=email, password=password)
+        created_user.save()
+
+        # Add the user to the 'client' group (or any other default group for new users)
+        user_group, _ = Group.objects.get_or_create(name="client")
+        created_user.groups.add(user_group)
+
+        # Generate a token for email verification
+        token = str(uuid.uuid4())
+
+        # Set the token in the user's profile
+        user_profile, _ = Profile.objects.get_or_create(user=created_user)
+        user_profile.email_token = token
+        user_profile.email = email
+        user_profile.save()
+
+        # Optional: Send a verification email here
+        # send_verification_email(email, token)
+
+        # Set email in session
+        request.session['email'] = email
+
+        # Respond with success message and next steps
+        return JsonResponse({
+            "status": "success",
+            "message": "User registered successfully. Please verify your email.",
+            "redirect_url": "login"  # Optional: include URL to redirect after verification
+        }, status=201)
